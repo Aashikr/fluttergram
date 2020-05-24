@@ -28,7 +28,7 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>com.googleusercontent.apps.7019780124-8d9k97bo7jd6gn2fdm8pahj260br014j</string>
-				<string>com.googleusercontent.apps.7019780124-lrego1vac3jl8a6egvo8efe56o8v2po0</string>
+				<string>com.googleusercontent.apps.1032341354697-kqhinv646pmn8akpoji2csfersc1tajt</string>
 			</array>
 		</dict>
 	</array>
@@ -38,6 +38,10 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Used to allow the user to take a photo to upload as a post</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Your location required to post </string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Your location required to post</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Used to allow the user to select a photo to upload as a post</string>
 	<key>UILaunchStoryboardName</key>
@@ -61,10 +65,6 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Your location required to post </string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Your location required to post</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 </dict>

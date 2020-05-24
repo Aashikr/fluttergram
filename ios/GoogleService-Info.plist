@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1032341354697-kqhinv646pmn8akpoji2csfersc1tajt.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1032341354697-kqhinv646pmn8akpoji2csfersc1tajt</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAZKWjsXJhH5nCslw4xvtwmJJg_t2DsoGA</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1032341354697</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.picchar.picchar</string>
+	<key>PROJECT_ID</key>
+	<string>picchar-cli-2020</string>
+	<key>STORAGE_BUCKET</key>
+	<string>picchar-cli-2020.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1032341354697:ios:1f015eba61f9c47756b518</string>
+	<key>DATABASE_URL</key>
+	<string>https://picchar-cli-2020.firebaseio.com</string>
+</dict>
+</plist>
