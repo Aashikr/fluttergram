@@ -6,6 +6,7 @@ import 'dart:async';
 import 'profile_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'comment_screen.dart';
+import 'dropdown_button.dart';
 import 'package:flare_flutter/flare_actor.dart';
 
 class ImagePost extends StatefulWidget {
@@ -192,13 +193,23 @@ class _ImagePost extends State<ImagePost> {
                 },
               ),
               subtitle: Text(this.location),
-              trailing: const Icon(Icons.more_vert),
+              trailing: GestureDetector(
+                // child: Icon(Icons.more_vert),
+                child: buildDropdownButton(),
+              )
             );
           }
 
           // snapshot data is null here
           return Container();
         });
+  }
+
+  buildDropdownButton() {
+    var doc = Firestore.instance
+            .collection('insta_users')
+            .document(ownerId);
+    return MyDropDownButton(doc);
   }
 
   Container loadingPlaceHolder = Container(
@@ -351,16 +362,16 @@ class _ImagePost extends State<ImagePost> {
     var hourDiff = difference.inHours;
     var secDiff = difference.inSeconds;
     var displayTimestamp = '$secDiff seconds ago';
-    if(secDiff > 60 ){
+    if(secDiff >= 60 ){
       displayTimestamp = '$minDiff minutes ago';
     }
-    if(minDiff > 60) {
+    if(minDiff >= 60) {
       displayTimestamp = '$hourDiff hours ago';
     }
-    if(hourDiff > 24) {
+    if(hourDiff >= 24) {
       displayTimestamp = '$dayDiff day ago';
-      if(dayDiff > 1) {
-      displayTimestamp = '$dayDiff day(s) ago';
+      if(dayDiff >= 1) {
+      displayTimestamp = '$dayDiff days ago';
       }
     }
     return displayTimestamp;
