@@ -16,7 +16,8 @@ class ImagePost extends StatefulWidget {
       this.description,
       this.likes,
       this.postId,
-      this.ownerId});
+      this.ownerId,
+      this.timestamp});
 
   factory ImagePost.fromDocument(DocumentSnapshot document) {
     return ImagePost(
@@ -27,6 +28,7 @@ class ImagePost extends StatefulWidget {
       description: document['description'],
       postId: document.documentID,
       ownerId: document['ownerId'],
+      timestamp: document['timestamp'],
     );
   }
 
@@ -39,6 +41,7 @@ class ImagePost extends StatefulWidget {
       description: data['description'],
       ownerId: data['ownerId'],
       postId: data['postId'],
+      timestamp: data['timestamp']
     );
   }
 
@@ -65,6 +68,7 @@ class ImagePost extends StatefulWidget {
   final likes;
   final String postId;
   final String ownerId;
+  final String timestamp;
 
   _ImagePost createState() => _ImagePost(
         mediaUrl: this.mediaUrl,
@@ -75,6 +79,7 @@ class ImagePost extends StatefulWidget {
         likeCount: getLikeCount(this.likes),
         ownerId: this.ownerId,
         postId: this.postId,
+        timestamp: this.timestamp,
       );
 }
 
@@ -83,6 +88,7 @@ class _ImagePost extends State<ImagePost> {
   final String username;
   final String location;
   final String description;
+  final String timestamp;
   Map likes;
   int likeCount;
   final String postId;
@@ -106,7 +112,8 @@ class _ImagePost extends State<ImagePost> {
       this.likes,
       this.postId,
       this.likeCount,
-      this.ownerId});
+      this.ownerId,
+      this.timestamp});
 
   GestureDetector buildLikeIcon() {
     Color color;
@@ -199,127 +206,164 @@ class _ImagePost extends State<ImagePost> {
     child: Center(child: CircularProgressIndicator()),
   );
 
+  
+
   @override
   Widget build(BuildContext context) {
     liked = (likes[googleSignIn.currentUser.id.toString()] == true);
-
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        buildPostHeader(ownerId: ownerId),
-        buildLikeableImage(),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+    var displayTimeStamp = calculateTimestamp(timestamp);
+        return Column(
+          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Padding(padding: const EdgeInsets.only(left: 20.0, top: 40.0)),
-            buildLikeIcon(),
-            Padding(padding: const EdgeInsets.only(right: 20.0)),
-            GestureDetector(
-                child: const Icon(
-                  FontAwesomeIcons.comment,
-                  size: 25.0,
+            buildPostHeader(ownerId: ownerId),
+            buildLikeableImage(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Padding(padding: const EdgeInsets.only(left: 20.0, top: 40.0)),
+                buildLikeIcon(),
+                Padding(padding: const EdgeInsets.only(right: 20.0)),
+                GestureDetector(
+                    child: const Icon(
+                      FontAwesomeIcons.comment,
+                      size: 25.0,
+                    ),
+                    onTap: () {
+                      goToComments(
+                          context: context,
+                          postId: postId,
+                          ownerId: ownerId,
+                          mediaUrl: mediaUrl);
+                    }),
+              ],
+            ),
+            Row(
+              children: <Widget>[
+                Container(
+                  margin: const EdgeInsets.only(left: 20.0),
+                  child: Text(
+                    "$likeCount likes",
+                    style: boldStyle,
+                  ),
                 ),
-                onTap: () {
-                  goToComments(
-                      context: context,
-                      postId: postId,
-                      ownerId: ownerId,
-                      mediaUrl: mediaUrl);
-                }),
+              ],
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                    margin: const EdgeInsets.only(left: 20.0),
+                    child: Text(
+                      "$username ",
+                      style: boldStyle,
+                    )),
+                Expanded(child: Text(description)),
+              ],
+            ),
+            Row(
+              children: <Widget>[
+                Container(
+                  margin: const EdgeInsets.only(left: 20.0),
+                  child: Text(
+                    "$displayTimeStamp ",
+                    // style: boldStyle,
+                  ),
+                ),
+              ],
+            ),
           ],
-        ),
-        Row(
-          children: <Widget>[
-            Container(
-              margin: const EdgeInsets.only(left: 20.0),
-              child: Text(
-                "$likeCount likes",
-                style: boldStyle,
-              ),
-            )
-          ],
-        ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(
-                margin: const EdgeInsets.only(left: 20.0),
-                child: Text(
-                  "$username ",
-                  style: boldStyle,
-                )),
-            Expanded(child: Text(description)),
-          ],
-        )
-      ],
-    );
-  }
-
-  void _likePost(String postId2) {
-    var userId = googleSignIn.currentUser.id;
-    bool _liked = likes[userId] == true;
-
-    if (_liked) {
-      print('removing like');
-      reference.document(postId).updateData({
-        'likes.$userId': false
-        //firestore plugin doesnt support deleting, so it must be nulled / falsed
-      });
-
-      setState(() {
-        likeCount = likeCount - 1;
-        liked = false;
-        likes[userId] = false;
-      });
-
-      removeActivityFeedItem();
-    }
-
-    if (!_liked) {
-      print('liking');
-      reference.document(postId).updateData({'likes.$userId': true});
-
-      addActivityFeedItem();
-
-      setState(() {
-        likeCount = likeCount + 1;
-        liked = true;
-        likes[userId] = true;
-        showHeart = true;
-      });
-      Timer(const Duration(milliseconds: 2000), () {
-        setState(() {
-          showHeart = false;
+        );
+      }
+    
+      void _likePost(String postId2) {
+        var userId = googleSignIn.currentUser.id;
+        bool _liked = likes[userId] == true;
+    
+        if (_liked) {
+          print('removing like');
+          reference.document(postId).updateData({
+            'likes.$userId': false
+            //firestore plugin doesnt support deleting, so it must be nulled / falsed
+          });
+    
+          setState(() {
+            likeCount = likeCount - 1;
+            liked = false;
+            likes[userId] = false;
+          });
+    
+          removeActivityFeedItem();
+        }
+    
+        if (!_liked) {
+          print('liking');
+          reference.document(postId).updateData({'likes.$userId': true});
+    
+          addActivityFeedItem();
+    
+          setState(() {
+            likeCount = likeCount + 1;
+            liked = true;
+            likes[userId] = true;
+            showHeart = true;
+          });
+          Timer(const Duration(milliseconds: 2000), () {
+            setState(() {
+              showHeart = false;
+            });
+          });
+        }
+      }
+    
+      void addActivityFeedItem() {
+        Firestore.instance
+            .collection("insta_a_feed")
+            .document(ownerId)
+            .collection("items")
+            .document(postId)
+            .setData({
+          "username": currentUserModel.username,
+          "userId": currentUserModel.id,
+          "type": "like",
+          "userProfileImg": currentUserModel.photoUrl,
+          "mediaUrl": mediaUrl,
+          "timestamp": DateTime.now(),
+          "postId": postId,
         });
-      });
+      }
+    
+      void removeActivityFeedItem() {
+        Firestore.instance
+            .collection("insta_a_feed")
+            .document(ownerId)
+            .collection("items")
+            .document(postId)
+            .delete();
+      }
     }
-  }
-
-  void addActivityFeedItem() {
-    Firestore.instance
-        .collection("insta_a_feed")
-        .document(ownerId)
-        .collection("items")
-        .document(postId)
-        .setData({
-      "username": currentUserModel.username,
-      "userId": currentUserModel.id,
-      "type": "like",
-      "userProfileImg": currentUserModel.photoUrl,
-      "mediaUrl": mediaUrl,
-      "timestamp": DateTime.now(),
-      "postId": postId,
-    });
-  }
-
-  void removeActivityFeedItem() {
-    Firestore.instance
-        .collection("insta_a_feed")
-        .document(ownerId)
-        .collection("items")
-        .document(postId)
-        .delete();
-  }
+    
+    calculateTimestamp(timestamp) {
+    var now = DateTime.now();
+    var postTime = DateTime.parse(timestamp);
+    var difference = now.difference(postTime);
+    var dayDiff = difference.inDays;
+    var minDiff = difference.inMinutes;
+    var hourDiff = difference.inHours;
+    var secDiff = difference.inSeconds;
+    var displayTimestamp = '$secDiff seconds ago';
+    if(secDiff > 60 ){
+      displayTimestamp = '$minDiff minutes ago';
+    }
+    if(minDiff > 60) {
+      displayTimestamp = '$hourDiff hours ago';
+    }
+    if(hourDiff > 24) {
+      displayTimestamp = '$dayDiff day ago';
+      if(dayDiff > 1) {
+      displayTimestamp = '$dayDiff day(s) ago';
+      }
+    }
+    return displayTimestamp;
 }
 
 class ImagePostFromId extends StatelessWidget {
