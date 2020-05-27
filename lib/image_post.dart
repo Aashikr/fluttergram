@@ -88,7 +88,7 @@ class _ImagePost extends State<ImagePost> {
   final String mediaUrl;
   final String username;
   final String location;
-  final String description;
+  String description;
   final String timestamp;
   Map likes;
   int likeCount;
@@ -206,10 +206,7 @@ class _ImagePost extends State<ImagePost> {
   }
 
   buildDropdownButton() {
-    var doc = Firestore.instance
-            .collection('insta_users')
-            .document(ownerId);
-    return MyDropDownButton(doc);
+    return MyDropDownButton(_updateImagePost);
   }
 
   Container loadingPlaceHolder = Container(
@@ -284,6 +281,27 @@ class _ImagePost extends State<ImagePost> {
             ),
           ],
         );
+      }
+
+      void _updateImagePost(String action){
+        var currentPost = Firestore.instance
+            .collection('insta_posts')
+            .document(postId);
+        if(action == 'Edit'){
+            currentPost.updateData({
+                "description": 'Edited description'
+            });
+          setState(() {
+            description = 'Edited description';
+          });
+        } else if(action == 'Delete') {
+         currentPost.updateData({
+                "description": ''
+            });
+          setState(() {
+            description = '';
+          });
+        }
       }
     
       void _likePost(String postId2) {
@@ -363,16 +381,13 @@ class _ImagePost extends State<ImagePost> {
     var secDiff = difference.inSeconds;
     var displayTimestamp = '$secDiff seconds ago';
     if(secDiff >= 60 ){
-      displayTimestamp = '$minDiff minutes ago';
+      displayTimestamp = minDiff > 1 ? '$minDiff minutes ago': '$minDiff minute ago';
     }
     if(minDiff >= 60) {
-      displayTimestamp = '$hourDiff hours ago';
+      displayTimestamp = hourDiff > 1 ? '$hourDiff hours ago': '$hourDiff hour ago';
     }
     if(hourDiff >= 24) {
-      displayTimestamp = '$dayDiff day ago';
-      if(dayDiff >= 1) {
-      displayTimestamp = '$dayDiff days ago';
-      }
+      displayTimestamp = dayDiff > 1? '$dayDiff days ago': '$dayDiff day ago';
     }
     return displayTimestamp;
 }

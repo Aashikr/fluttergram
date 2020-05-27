@@ -10,30 +10,26 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class MyDropDownButton extends StatefulWidget {
-  final DocumentReference doc;
-  MyDropDownButton(this.doc, {Key key}) : super(key: key);
+  final Function updateImagePost;
+  MyDropDownButton(this.updateImagePost, {Key key}) : super(key: key);
 
   @override
   _MyDropDownButtonState createState() => _MyDropDownButtonState(
-    doc: this.doc
+    updateImagePost: this.updateImagePost
   );
 }
 
 class _MyDropDownButtonState extends State<MyDropDownButton> {
-  // String dropdownValue = 'One';
-  final DocumentReference doc;
-
-  _MyDropDownButtonState({this.doc});
+  final DocumentReference currentPost;
+  final DocumentReference currentFeedItem;
+  final Function updateImagePost;
+  _MyDropDownButtonState({this.currentPost, this.currentFeedItem, this.updateImagePost});
 
   @override
   Widget build(BuildContext context) {
     return new DropdownButtonHideUnderline(
- child: DropdownButton<String>(
-      // value: dropdownValue,
+     child: DropdownButton<String>(
       icon: Icon(Icons.more_vert),
-      // iconSize: 24,
-      // elevation: 16,
-      // style: TextStyle(color: Colors.black),
       onChanged: (String newValue) {
         setState(() {
           // dropdownValue = newValue;
@@ -45,10 +41,7 @@ class _MyDropDownButtonState extends State<MyDropDownButton> {
           value: value,
           child: Text(value),
           onTap: () => {
-            print('$value option clicked'),
-            if(value == 'Delete'){
-              // this.doc.delete(),
-            }
+              widget.updateImagePost(value)
           },
         );
       }).toList(),

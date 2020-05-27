@@ -1,5 +1,5 @@
-name: Fluttergram
-description: A new Flutter application.
+name: Picchar
+description: A personalized picture sharing experince.
 version: 1.2.3+1
 
 dependencies:

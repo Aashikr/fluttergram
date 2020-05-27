@@ -350,12 +350,12 @@
       "languageVersion": "2.7"
     },
     {
-      "name": "Fluttergram",
+      "name": "Picchar",
       "rootUri": "../",
       "packageUri": "lib/"
     }
   ],
-  "generated": "2020-05-24T07:33:30.427669Z",
+  "generated": "2020-05-27T03:38:29.066768Z",
   "generator": "pub",
   "generatorVersion": "2.8.2"
 }
