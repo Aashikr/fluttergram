@@ -21,6 +21,10 @@ class ImagePost extends StatefulWidget {
       this.timestamp});
 
   factory ImagePost.fromDocument(DocumentSnapshot document) {
+
+    Timestamp time = document['timestamp'];
+    DateTime dateTime = time.toDate();
+
     return ImagePost(
       username: document['username'],
       location: document['location'],
@@ -29,7 +33,7 @@ class ImagePost extends StatefulWidget {
       description: document['description'],
       postId: document.documentID,
       ownerId: document['ownerId'],
-      timestamp: document['timestamp'],
+      timestamp: dateTime.toString(),
     );
   }
 
